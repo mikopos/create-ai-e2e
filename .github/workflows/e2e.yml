@@ -25,11 +25,11 @@ jobs:
           path: examples/sample-react-app/node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('examples/sample-react-app/package-lock.json') }}
 
-      - name: Install create-ai-e2e globally
-        run: npm install -g https://$GITHUB_ACTOR:${{ secrets.GH_PAT }}@github.com/mikopos/create-ai-e2e
-
       - name: Install dependencies
         run: npm install
+
+      - name: Install create-ai-e2e globally
+        run: npm install -g https://$GITHUB_ACTOR:${{ secrets.GH_PAT }}@github.com/mikopos/create-ai-e2e
 
       - name: Bootstrap generator & run tests
         run: |
