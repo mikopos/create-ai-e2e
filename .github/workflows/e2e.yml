@@ -36,6 +36,9 @@ jobs:
           npx create-ai-e2e gen --ai
           npx playwright test --reporter=html
 
+      - name: Ensure Playwright Report Directory Exists
+        run: mkdir -p examples/sample-react-app/playwright-report
+
       - name: Upload Artifacts (optional)
         uses: actions/upload-artifact@v3
         with:
