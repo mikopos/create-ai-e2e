@@ -25,11 +25,8 @@ jobs:
           path: examples/sample-react-app/node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('examples/sample-react-app/package-lock.json') }}
 
-      - name: Authenticate with GitHub Package Registry
-        run: echo "//npm.pkg.github.com/:_authToken=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" > ~/.npmrc
-
       - name: Install create-ai-e2e globally
-        run: npm install -g https://github.com/mikopos/create-ai-e2e
+        run: npm install -g https://$GITHUB_ACTOR:${{ secrets.GH_PAT }}@github.com/mikopos/create-ai-e2e
 
       - name: Install dependencies
         run: npm install
