@@ -26,7 +26,11 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('examples/sample-react-app/package-lock.json') }}
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          cd ../
+          cd ../
+          npm install
 
       - name: Bootstrap generator & run tests
         run: |
