@@ -39,7 +39,7 @@ jobs:
       - name: Upload Artifacts (optional)
         uses: actions/upload-artifact@v3
         with:
-          name: playwright-report
+          name: index.html
           path: examples/sample-react-app/playwright-report
 
   analyze-report:
