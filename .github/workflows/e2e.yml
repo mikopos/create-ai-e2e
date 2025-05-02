@@ -30,9 +30,9 @@ jobs:
 
       - name: Bootstrap generator & run tests
         run: |
-          npx create-ai-e2e init
-          npx create-ai-e2e scan src/ --json
-          npx create-ai-e2e gen --ai
+          npx --no-install create-ai-e2e init
+          npx --no-install create-ai-e2e scan src/ --json
+          npx --no-install create-ai-e2e gen --ai
           npx playwright test --reporter=html
 
 #      - name: Ensure Playwright Report Directory Exists
