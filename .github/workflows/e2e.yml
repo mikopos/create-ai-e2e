@@ -1,0 +1,43 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/sample-react-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: examples/sample-react-app/node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('examples/sample-react-app/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Bootstrap generator & run tests
+        run: |
+          npm install -g create-ai-e2e   # or use npx
+          npx create-ai-e2e init
+          npx create-ai-e2e scan src/ --json
+          npx create-ai-e2e gen --ai
+          npx playwright test
+
+      - name: Upload Artifacts (optional)
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: examples/sample-react-app/playwright-report
