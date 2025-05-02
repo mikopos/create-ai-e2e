@@ -36,27 +36,27 @@ jobs:
           npx create-ai-e2e gen --ai
           npx playwright test --reporter=html
 
-      - name: Ensure Playwright Report Directory Exists
-        run: mkdir -p examples/sample-react-app/playwright-report
+#      - name: Ensure Playwright Report Directory Exists
+#        run: mkdir -p examples/sample-react-app/playwright-report
 
-      - name: Upload Artifacts (optional)
-        uses: actions/upload-artifact@v3
-        with:
-          name: playwright-report
-          path: examples/sample-react-app/playwright-report
-
-  analyze-report:
-    needs: e2e
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: downloaded-report
-    steps:
-      - name: Download Playwright Report
-        uses: actions/download-artifact@v3
-        with:
-          name: playwright-report
-          path: .            # downloads into ./downloaded-report by default
-
-      - name: List report files
-        run: ls -R .
+#      - name: Upload Artifacts (optional)
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: playwright-report
+#          path: examples/sample-react-app/playwright-report
+#
+#  analyze-report:
+#    needs: e2e
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        working-directory: downloaded-report
+#    steps:
+#      - name: Download Playwright Report
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: playwright-report
+#          path: .            # downloads into ./downloaded-report by default
+#
+#      - name: List report files
+#        run: ls -R .
