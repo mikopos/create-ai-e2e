@@ -28,9 +28,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install create-ai-e2e globally
-        run: npm install -g https://$GITHUB_ACTOR:${{ secrets.GH_PAT }}@github.com/mikopos/create-ai-e2e
-
       - name: Bootstrap generator & run tests
         run: |
           npx create-ai-e2e init
