@@ -39,8 +39,8 @@ jobs:
       - name: Upload Artifacts (optional)
         uses: actions/upload-artifact@v3
         with:
-          name: index.html
-          path: examples/sample-react-app/playwright-report
+          name: index
+          path: examples/sample-react-app/playwright-report/
 
   analyze-report:
     needs: e2e
