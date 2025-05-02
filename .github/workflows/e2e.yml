@@ -41,3 +41,19 @@ jobs:
         with:
           name: playwright-report
           path: examples/sample-react-app/playwright-report
+
+  analyze-report:
+    needs: e2e
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: downloaded-report
+    steps:
+      - name: Download Playwright Report
+        uses: actions/download-artifact@v3
+        with:
+          name: playwright-report
+          path: .            # downloads into ./downloaded-report by default
+
+      - name: List report files
+        run: ls -R .
