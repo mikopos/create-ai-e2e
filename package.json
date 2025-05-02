@@ -1,0 +1,43 @@
+{
+  "name": "create-ai-e2e",
+  "version": "0.1.0",
+  "description": "E2E frontend tests generator",
+  "main": "index.js",
+  "bin": {
+    "create-ai-e2e": "./dist/cli.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikopos/create-ai-e2e.git"
+  },
+  "keywords": [],
+  "author": "Marios Gavriil",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mikopos/create-ai-e2e/issues"
+  },
+  "homepage": "https://github.com/mikopos/create-ai-e2e#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.1",
+    "@babel/core": "^7.26.10",
+    "@babel/parser": "^7.27.0",
+    "@babel/traverse": "^7.27.0",
+    "@vue/compiler-sfc": "^3.5.13",
+    "axios": "^1.9.0",
+    "commander": "^13.1.0",
+    "execa": "^9.5.2",
+    "glob": "^11.0.2",
+    "openai": "^4.96.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/babel__traverse": "^7.20.7",
+    "@types/glob": "^8.1.0",
+    "@types/node": "^22.15.3",
+    "typescript": "^5.0.0"
+  }
+}
