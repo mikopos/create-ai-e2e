@@ -25,6 +25,12 @@ export default defineConfig({
     ignoreHTTPSErrors: true,
   },
 
+  reporter: [
+    ["list"],
+    ["html", { outputFolder: "playwright-report", open: "never" }],
+  ],
+
+
   projects: [
     {
       name: "chromium",
