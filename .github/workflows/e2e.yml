@@ -17,7 +17,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
 
       - name: Install dependencies
@@ -26,8 +26,14 @@ jobs:
           npm ci
           # Install create-ai-e2e globally
           npm install -g .
-          # Install sample app dependencies
+          # Create and navigate to sample app directory
+          mkdir -p examples/sample-react-app
           cd examples/sample-react-app
+          # Initialize the sample app if it doesn't exist
+          if [ ! -f "package.json" ]; then
+            npm init -y
+            npm install react react-dom react-router-dom@6.22.3
+          fi
           npm ci
 
       - name: Bootstrap generator & run tests
