@@ -40,12 +40,10 @@ jobs:
         run: |
           # Initialize and run tests
           cd ../../
-          # Install the package locally
-          npm install -g .
-          # Run the commands
-          create-ai-e2e init
-          create-ai-e2e scan examples/sample-react-app/src/ --json
-          create-ai-e2e gen --ai
+          # Run the commands using the local package
+          node ./dist/index.js init
+          node ./dist/index.js scan examples/sample-react-app/src/ --json
+          node ./dist/index.js gen --ai
           
           # Start the development server in the background
           cd examples/sample-react-app
