@@ -24,8 +24,6 @@ jobs:
         run: |
           # Install root dependencies
           npm ci
-          # Install create-ai-e2e globally
-          npm install -g .
           # Create and navigate to sample app directory
           mkdir -p examples/sample-react-app
           cd examples/sample-react-app
@@ -39,11 +37,13 @@ jobs:
       - name: Bootstrap generator & run tests
         run: |
           # Initialize and run tests
-          create-ai-e2e init
-          create-ai-e2e scan src/ --json
-          create-ai-e2e gen --ai
+          cd ../../
+          npx create-ai-e2e init
+          npx create-ai-e2e scan examples/sample-react-app/src/ --json
+          npx create-ai-e2e gen --ai
           
           # Start the development server in the background
+          cd examples/sample-react-app
           npm run dev &
           # Wait for the server to be ready
           npx wait-on http://localhost:5173
