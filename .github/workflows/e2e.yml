@@ -38,9 +38,12 @@ jobs:
         run: |
           # Initialize and run tests
           cd ../../
-          npx create-ai-e2e init
-          npx create-ai-e2e scan examples/sample-react-app/src/ --json
-          npx create-ai-e2e gen --ai
+          # Link the package locally
+          npm link
+          # Run the commands using the local package
+          node_modules/.bin/create-ai-e2e init
+          node_modules/.bin/create-ai-e2e scan examples/sample-react-app/src/ --json
+          node_modules/.bin/create-ai-e2e gen --ai
           
           # Start the development server in the background
           cd examples/sample-react-app
