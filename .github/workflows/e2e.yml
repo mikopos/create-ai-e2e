@@ -41,9 +41,9 @@ jobs:
           # Initialize and run tests
           cd ../../
           # Run the commands using the local package
-          node ./dist/index.js init
-          node ./dist/index.js scan examples/sample-react-app/src/ --json
-          node ./dist/index.js gen --ai
+          node ./dist/cli.js init
+          node ./dist/cli.js scan examples/sample-react-app/src/ --json
+          node ./dist/cli.js gen --ai
           
           # Start the development server in the background
           cd examples/sample-react-app
