@@ -1,172 +1,138 @@
-# create-ai-e2e Quick Start
-
-[//]: # (![Quick Start Demo]&#40;https://asciinema.org/a/123456.svg&#41;)
+# create-ai-e2e
 
 > **Get from zero to green E2E tests in under 60 seconds.**
 
----
+[![E2E Tests Badge](https://github.com/mikopos/create-ai-e2e/actions/workflows/e2e.yml/badge.svg)](https://github.com/mikopos/create-ai-e2e/actions/workflows/e2e.yml)
 
-## Prerequisites
+## Features
 
-- **Node.js ≥ 20** installed
+- 🚀 Quick setup with zero configuration
+- 🔍 Automatic route detection for Vue.js and React
+- 🤖 AI-powered test generation (optional)
+- 📊 GitHub Actions integration
+- 🎯 Framework-specific support
+
+## Quick Start
+
+### Prerequisites
+
+- **Node.js ≥ 20**
 - **NPM** or **Yarn**
 - **API Keys** (optional, for AI assertions):
   ```bash
-  # OpenAI API key
-  export OPENAI_API_KEY=sk-...
-  
-  # Anthropic API key
-  export ANTHROPIC_API_KEY=sk-...
-  
-  # Hugging Face API key
-  export HUGGINGFACE_API_KEY=hf_...
-  
-  # Hugging Face model (optional)
-  export HF_MODEL=google/flan-t5-small
+  export OPENAI_API_KEY=sk-...      # OpenAI API key
+  export ANTHROPIC_API_KEY=sk-...   # Anthropic API key
+  export HUGGINGFACE_API_KEY=hf_... # Hugging Face API key
+  export HF_MODEL=google/flan-t5-small # Optional Hugging Face model
   ```
 
-## Setting up GitHub Repository Secrets
-
-To use AI features in GitHub Actions, you need to add your API keys as repository secrets:
-
-1. Go to your GitHub repository
-2. Click on "Settings" tab
-3. In the left sidebar, click on "Secrets and variables" → "Actions"
-4. Click on "New repository secret" button
-5. Add each API key as a separate secret:
-
-   | Secret Name | Description |
-   |------------|-------------|
-   | `OPENAI_API_KEY` | Your OpenAI API key |
-   | `ANTHROPIC_API_KEY` | Your Anthropic API key |
-   | `HUGGINGFACE_API_KEY` | Your Hugging Face API key |
-
-6. For each secret:
-   - Enter the name exactly as shown above
-   - Paste the corresponding API key value
-   - Click "Add secret"
-
-> **Note**: These secrets are encrypted and can only be used in GitHub Actions workflows. They are not visible in logs or accessible to anyone else.
-
-## Publishing to npm
-
-This package is published to npm automatically when a new GitHub release is created. To publish a new version:
-
-1. Update the version in `package.json`
-2. Create a new GitHub release with the same version number
-3. The GitHub Actions workflow will automatically publish to npm
-
-To set up publishing for your own fork:
-
-1. Create an npm account if you don't have one
-2. Generate an npm access token with publish permissions
-3. Add the token as a repository secret named `NPM_TOKEN`
-4. The workflow will use this token to publish to npm
-
-## 1. Install the CLI
-
-Install directly via npx (no global install needed):
+### Installation
 
 ```bash
-npx create-ai-e2e init
+# Install via npm
+npm install create-ai-e2e --save-dev
+
+# Or via yarn
+yarn add create-ai-e2e --dev
 ```
 
-This will:
+### Basic Usage
 
-- Install Playwright and download browser binaries
-- Create a `playwright.config.ts` in your project root
+1. **Initialize**:
+   ```bash
+   npx create-ai-e2e init
+   ```
 
----
+2. **Scan your codebase**:
+   ```bash
+   # For React (default)
+   npx create-ai-e2e scan src/
+   
+   # For Vue.js
+   npx create-ai-e2e scan src/ --vue
+   ```
 
-## 2. Scan your codebase
+3. **Generate tests**:
+   ```bash
+   # Basic tests
+   npx create-ai-e2e gen
+   
+   # With AI assertions
+   npx create-ai-e2e gen --ai
+   ```
 
-Detect routes/components in your `src/` folder:
+4. **Run tests**:
+   ```bash
+   npx playwright test
+   ```
 
-```bash
-npx create-ai-e2e scan src/ [--vue] [--json]
+## Advanced Usage
+
+### GitHub Actions Integration
+
+1. **Add workflow file**:
+   ```bash
+   mkdir -p .github/workflows
+   curl -o .github/workflows/e2e.yml https://raw.githubusercontent.com/mikopos/create-ai-e2e/main/.github/workflows/e2e.yml
+   ```
+
+2. **Configure secrets**:
+   - Go to repository Settings → Secrets and variables → Actions
+   - Add required API keys (optional):
+     - `OPENAI_API_KEY`
+     - `ANTHROPIC_API_KEY`
+     - `HUGGINGFACE_API_KEY`
+
+3. **Add status badge**:
+   ```markdown
+   [![E2E Tests](https://github.com/your-username/your-repo/actions/workflows/e2e.yml/badge.svg)](https://github.com/your-username/your-repo/actions/workflows/e2e.yml)
+   ```
+
+### Custom Configuration
+
+Create `.e2eignore` to exclude files:
+```
+# Example .e2eignore
+src/components/legacy/
+src/utils/internal/
 ```
 
-- `--vue`: scan as a Vue project (default is React)
-- `--json`: output raw JSON for automation
+### Package Scripts
 
-You should see:
-
-```
-🔍 Found routes:
-  • /
-  • /about
-  • /products
-```
-
----
-
-## 3. Generate tests
-
-Generate Playwright smoke specs for each route:
-
-```bash
-# Basic smoke tests:
-npx create-ai-e2e gen
-
-# With AI assertions (requires API keys):
-npx create-ai-e2e gen --ai
-```  
-
-Your `tests/` folder will now contain files like `home.spec.ts`, `about.spec.ts`, etc.
-
----
-
-## 4. Run your tests
-
-Kick off Playwright:
-
-```bash
-npx playwright test
+Add these to your `package.json`:
+```json
+{
+  "scripts": {
+    "e2e:init": "create-ai-e2e init",
+    "e2e:scan": "create-ai-e2e scan src/",
+    "e2e:gen": "create-ai-e2e gen",
+    "e2e:test": "playwright test"
+  }
+}
 ```
 
-All tests should pass (💚) on first run.
+## Troubleshooting
 
----
+- **Permission errors**: Run via `node ./dist/cli.js <command>`
+- **Custom router paths**: Use `.e2eignore` to exclude files
+- **Disable AI mode**: Unset API key environment variables
+- **CI failures**: Check uploaded artifacts for detailed reports
 
-## GitHub Actions Integration
+## Publishing
 
-The project includes a GitHub Actions workflow for automated E2E testing. The workflow:
+To publish a new version:
 
-1. Runs on push to main branch and pull requests
-2. Uses Node.js 20
-3. Installs dependencies and Playwright browsers
-4. Runs tests with HTML reporter
-5. Uploads test results as artifacts
+1. Update version in `package.json`
+2. Create a new GitHub release with matching version
+3. The workflow will automatically publish to npm
 
-To use the workflow in your project:
+For your own fork:
+1. Create npm account
+2. Generate npm access token with publish permissions
+3. Add token as `NPM_TOKEN` repository secret
 
-1. Copy the `.github/workflows/e2e.yml` file to your project
-2. Add required secrets in your repository settings (see "Setting up GitHub Repository Secrets" above)
-3. Update the working directory if needed
-4. Push to trigger the workflow
+## License
 
-Example workflow status badge:
-```markdown
-[![E2E Tests](https://github.com/your-username/your-repo/actions/workflows/e2e.yml/badge.svg)](https://github.com/your-username/your-repo/actions/workflows/e2e.yml)
-```
-
----
-
-## Tips & Troubleshooting
-
-- If you hit permission errors on global linking, skip linking and run via:
-  ```bash
-  node ./dist/cli.js <command>
-  ```
-- For projects with custom router paths, add a quick `.e2eignore` file to exclude files.
-- To disable AI mode by default, unset the API key environment variables.
-- If tests fail in CI, check the uploaded artifacts for detailed reports.
-- Make sure to set up your API keys as GitHub repository secrets for CI/CD.
-
----
-
-Ready to ship reliable E2E tests in minutes? Give it a spin and watch your CI badge go green! 🚀
-
-[![E2E Tests Badge](https://github.com/mikopos/create-ai-e2e/actions/workflows/e2e.yml/badge.svg)](https://github.com/mikopos/create-ai-e2e/actions/workflows/e2e.yml)
+MIT © [Marios Gavriil](https://github.com/mikopos)
 
 
