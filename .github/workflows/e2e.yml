@@ -43,9 +43,9 @@ jobs:
           # Initialize and run tests
           cd ../../
           # Run the commands using the linked package
-          create-ai-e2e init
-          create-ai-e2e scan examples/sample-react-app/src/ --json
-          create-ai-e2e gen --ai
+          npx create-ai-e2e init
+          npx create-ai-e2e scan examples/sample-react-app/src/ --json
+          npx create-ai-e2e gen --ai
           
           # Start the development server in the background
           cd examples/sample-react-app
