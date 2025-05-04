@@ -48,6 +48,21 @@ To use AI features in GitHub Actions, you need to add your API keys as repositor
 
 > **Note**: These secrets are encrypted and can only be used in GitHub Actions workflows. They are not visible in logs or accessible to anyone else.
 
+## Publishing to npm
+
+This package is published to npm automatically when a new GitHub release is created. To publish a new version:
+
+1. Update the version in `package.json`
+2. Create a new GitHub release with the same version number
+3. The GitHub Actions workflow will automatically publish to npm
+
+To set up publishing for your own fork:
+
+1. Create an npm account if you don't have one
+2. Generate an npm access token with publish permissions
+3. Add the token as a repository secret named `NPM_TOKEN`
+4. The workflow will use this token to publish to npm
+
 ## 1. Install the CLI
 
 Install directly via npx (no global install needed):
