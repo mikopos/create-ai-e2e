@@ -8,7 +8,7 @@
 
 ## Prerequisites
 
-- **Node.js ≥ 16** installed
+- **Node.js ≥ 20** installed
 - **NPM** or **Yarn**
 - (Optional) **Anthropic API key** for AI assertions
   ```bash
@@ -80,17 +80,26 @@ All tests should pass (💚) on first run.
 
 ---
 
-## Recording a GIF demo (Optional)
+## GitHub Actions Integration
 
-```bash
-# Start recording
-asciinema rec demo.cast --command="npx create-ai-e2e init && npx create-ai-e2e scan src/ && npx create-ai-e2e gen --ai && npx playwright test"
+The project includes a GitHub Actions workflow for automated E2E testing. The workflow:
 
-# Upload and generate SVG/GIF
-asciinema upload demo.cast
+1. Runs on push to main branch and pull requests
+2. Uses Node.js 20
+3. Installs dependencies and Playwright browsers
+4. Runs tests with HTML reporter
+5. Uploads test results as artifacts
+
+To use the workflow in your project:
+
+1. Copy the `.github/workflows/e2e.yml` file to your project
+2. Update the working directory if needed
+3. Push to trigger the workflow
+
+Example workflow status badge:
+```markdown
+[![E2E Tests](https://github.com/your-username/your-repo/actions/workflows/e2e.yml/badge.svg)](https://github.com/your-username/your-repo/actions/workflows/e2e.yml)
 ```
-
-Embed the resulting link above.
 
 ---
 
@@ -102,6 +111,7 @@ Embed the resulting link above.
   ```
 - For projects with custom router paths, add a quick `.e2eignore` file to exclude files.
 - To disable AI mode by default, unset the `ANTHROPIC_API_KEY` env var.
+- If tests fail in CI, check the uploaded artifacts for detailed reports.
 
 ---
 
