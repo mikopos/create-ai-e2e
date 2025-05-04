@@ -4,68 +4,41 @@ on:
   push:
     branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
   e2e:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: examples/sample-react-app
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Use Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
         run: |
-          # Install root dependencies
           npm ci
-          # Build the package
-          npm run build
-          # Create and navigate to sample app directory
-          mkdir -p examples/sample-react-app
           cd examples/sample-react-app
-          # Initialize the sample app if it doesn't exist
-          if [ ! -f "package.json" ]; then
-            npm init -y
-            npm install react react-dom react-router-dom@6.22.3
-          fi
           npm ci
 
-      - name: Bootstrap generator & run tests
+      - name: Build and run tests
         run: |
-          # Initialize and run tests
-          cd ../../
-          # Run the commands using the local package
-          node node_modules/.bin/create-ai-e2e init
-          node node_modules/.bin/create-ai-e2e scan examples/sample-react-app/src/ --json
-          node node_modules/.bin/create-ai-e2e gen --ai
-          
-          # Start the development server in the background
           cd examples/sample-react-app
+          # Start the development server in the background
           npm run dev &
           # Wait for the server to be ready
           npx wait-on http://localhost:5173
-          
-          # Run the tests with debug information
-          npx playwright test --reporter=html --debug
+          # Run the tests
+          npx playwright test --reporter=html
 
-      - name: Upload Playwright Report
+      - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: examples/sample-react-app/playwright-report/
-          retention-days: 30
-
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: examples/sample-react-app/test-results/
           retention-days: 30
