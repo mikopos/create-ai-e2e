@@ -26,6 +26,8 @@ jobs:
           npm ci
           # Build the package
           npm run build
+          # Link the package globally
+          npm link
           # Create and navigate to sample app directory
           mkdir -p examples/sample-react-app
           cd examples/sample-react-app
@@ -40,10 +42,10 @@ jobs:
         run: |
           # Initialize and run tests
           cd ../../
-          # Run the commands using the compiled files
-          node --experimental-specifier-resolution=node dist/cli.js init
-          node --experimental-specifier-resolution=node dist/cli.js scan examples/sample-react-app/src/ --json
-          node --experimental-specifier-resolution=node dist/cli.js gen --ai
+          # Run the commands using the linked package
+          create-ai-e2e init
+          create-ai-e2e scan examples/sample-react-app/src/ --json
+          create-ai-e2e gen --ai
           
           # Start the development server in the background
           cd examples/sample-react-app
