@@ -1,7 +1,13 @@
 import OpenAI from "openai";
 
 // Initialize OpenAI client with your API key from env var
-const client = new OpenAI({ apiKey: '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' });
+const client = new OpenAI({ 
+  apiKey: process.env.OPENAI_API_KEY 
+});
+
+if (!process.env.OPENAI_API_KEY) {
+  console.warn("⚠️ OPENAI_API_KEY not set. OpenAI enrichment will be disabled.");
+}
 
 /**
  * Enriches a React or Vue component source string with 2 Playwright assertion lines
@@ -11,6 +17,10 @@ const client = new OpenAI({ apiKey: 'sk-proj-0Sqkd4mmMvx-Iy8lvjDwrVo5UoKkyNlpY22
  * @returns An array of `await` assertion lines for Playwright tests
  */
 export async function enrichAssertionsOpenAI(componentSrc: string): Promise<string[]> {
+  if (!process.env.OPENAI_API_KEY) {
+    return [];
+  }
+
   const prompt = `Here is a React/Vue component.\n` +
       `Return 2 Playwright assertion lines that would verify it works.\n` +
       `Only code, no prose:\n\n${componentSrc}`;

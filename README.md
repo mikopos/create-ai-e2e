@@ -10,10 +10,43 @@
 
 - **Node.js ≥ 20** installed
 - **NPM** or **Yarn**
-- (Optional) **Anthropic API key** for AI assertions
+- **API Keys** (optional, for AI assertions):
   ```bash
-  export ANTHROPIC_API_KEY=sk-...  
+  # OpenAI API key
+  export OPENAI_API_KEY=sk-...
+  
+  # Anthropic API key
+  export ANTHROPIC_API_KEY=sk-...
+  
+  # Hugging Face API key
+  export HUGGINGFACE_API_KEY=hf_...
+  
+  # Hugging Face model (optional)
+  export HF_MODEL=google/flan-t5-small
   ```
+
+## Setting up GitHub Repository Secrets
+
+To use AI features in GitHub Actions, you need to add your API keys as repository secrets:
+
+1. Go to your GitHub repository
+2. Click on "Settings" tab
+3. In the left sidebar, click on "Secrets and variables" → "Actions"
+4. Click on "New repository secret" button
+5. Add each API key as a separate secret:
+
+   | Secret Name | Description |
+   |------------|-------------|
+   | `OPENAI_API_KEY` | Your OpenAI API key |
+   | `ANTHROPIC_API_KEY` | Your Anthropic API key |
+   | `HUGGINGFACE_API_KEY` | Your Hugging Face API key |
+
+6. For each secret:
+   - Enter the name exactly as shown above
+   - Paste the corresponding API key value
+   - Click "Add secret"
+
+> **Note**: These secrets are encrypted and can only be used in GitHub Actions workflows. They are not visible in logs or accessible to anyone else.
 
 ## 1. Install the CLI
 
@@ -60,7 +93,7 @@ Generate Playwright smoke specs for each route:
 # Basic smoke tests:
 npx create-ai-e2e gen
 
-# With Claude 3.7 AI assertions:
+# With AI assertions (requires API keys):
 npx create-ai-e2e gen --ai
 ```  
 
@@ -93,8 +126,9 @@ The project includes a GitHub Actions workflow for automated E2E testing. The wo
 To use the workflow in your project:
 
 1. Copy the `.github/workflows/e2e.yml` file to your project
-2. Update the working directory if needed
-3. Push to trigger the workflow
+2. Add required secrets in your repository settings (see "Setting up GitHub Repository Secrets" above)
+3. Update the working directory if needed
+4. Push to trigger the workflow
 
 Example workflow status badge:
 ```markdown
@@ -110,8 +144,9 @@ Example workflow status badge:
   node ./dist/cli.js <command>
   ```
 - For projects with custom router paths, add a quick `.e2eignore` file to exclude files.
-- To disable AI mode by default, unset the `ANTHROPIC_API_KEY` env var.
+- To disable AI mode by default, unset the API key environment variables.
 - If tests fail in CI, check the uploaded artifacts for detailed reports.
+- Make sure to set up your API keys as GitHub repository secrets for CI/CD.
 
 ---
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Your Hugging Face API token (get one free at https://huggingface.co/settings/tokens)
-const HF_API_KEY = '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';
+const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 // The model to use; default to Llama-2-7b-chat-hf on the free inference tier
 const HF_MODEL = process.env.HF_MODEL ?? "google/flan-t5-small";
 // Inference endpoint for text-generation pipeline
@@ -9,7 +9,7 @@ const HF_API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
 
 if (!HF_API_KEY) {
   console.warn(
-      "⚠️  HF_API_KEY not set. Hugging Face enrichment will be disabled."
+      "⚠️ HUGGINGFACE_API_KEY not set. Hugging Face enrichment will be disabled."
   );
 }
 

@@ -1,7 +1,13 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 
 // Initialize Anthropic client with your API key
-const client = new Anthropic({ apiKey: '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'});
+const client = new Anthropic({ 
+  apiKey: process.env.ANTHROPIC_API_KEY 
+});
+
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.warn("⚠️ ANTHROPIC_API_KEY not set. Claude enrichment will be disabled.");
+}
 
 /**
  * Enriches a React or Vue component source string with 2 Playwright assertion lines
@@ -11,6 +17,10 @@ const client = new Anthropic({ apiKey: 'sk-ant-api03-5cR8Zds0jS-ItuvnXZhF-fiPcSe
  * @returns An array of `await` assertion lines for Playwright tests
  */
 export async function enrichAssertions(componentSrc: string): Promise<string[]> {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return [];
+  }
+
   // Build the prompt for Claude
   const prompt = `Here is a React/Vue component.\n` +
       `Return 2 Playwright assertion lines that would verify it works.\n` +
