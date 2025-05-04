@@ -1,6 +1,6 @@
 # create-ai-e2e Quick Start
 
-![Quick Start Demo](https://asciinema.org/a/123456.svg)
+[//]: # (![Quick Start Demo]&#40;https://asciinema.org/a/123456.svg&#41;)
 
 > **Get from zero to green E2E tests in under 60 seconds.**
 
