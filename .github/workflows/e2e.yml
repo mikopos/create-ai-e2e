@@ -24,8 +24,6 @@ jobs:
         run: |
           # Install root dependencies
           npm ci
-          # Install ts-node and required dependencies
-          npm install -D ts-node @types/node
           # Build the package
           npm run build
           # Create and navigate to sample app directory
@@ -42,10 +40,10 @@ jobs:
         run: |
           # Initialize and run tests
           cd ../../
-          # Run the commands using ts-node with ES modules
-          NODE_OPTIONS="--loader ts-node/esm" node src/cli.ts init
-          NODE_OPTIONS="--loader ts-node/esm" node src/cli.ts scan examples/sample-react-app/src/ --json
-          NODE_OPTIONS="--loader ts-node/esm" node src/cli.ts gen --ai
+          # Run the commands using the compiled files
+          node --experimental-specifier-resolution=node dist/cli.js init
+          node --experimental-specifier-resolution=node dist/cli.js scan examples/sample-react-app/src/ --json
+          node --experimental-specifier-resolution=node dist/cli.js gen --ai
           
           # Start the development server in the background
           cd examples/sample-react-app
