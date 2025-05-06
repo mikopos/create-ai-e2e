@@ -111,6 +111,53 @@ Add these to your `package.json`:
 }
 ```
 
+## Route Tagging
+
+The scanner automatically detects routes in your React and Vue applications. You can enhance route detection by adding special comments above your route definitions:
+
+```jsx
+// @tags public,main
+<Route path="/home" element={<Home />} />
+
+// @tags private,admin
+<Route path="/admin" element={<Admin />} />
+```
+
+### Available Tags
+
+- **Access Level**:
+  - `public` - Publicly accessible routes
+  - `private` - Routes requiring authentication
+  - `admin` - Admin-only routes
+
+- **Route Type**:
+  - `main` - Main application routes
+  - `info` - Information pages (about, contact, etc.)
+  - `dashboard` - Dashboard-related routes
+  - `user` - User-specific routes
+
+### Usage Examples
+
+```jsx
+// Public main route
+// @tags public,main
+<Route path="/" element={<Home />} />
+
+// Private dashboard route
+// @tags private,dashboard
+<Route path="/dashboard" element={<Dashboard />} />
+
+// Admin-only route with metadata
+// @tags private,admin
+<Route 
+  path="/admin" 
+  element={<Admin />}
+  meta={{ requiresAuth: true, roles: ['admin'] }}
+/>
+```
+
+These tags help the scanner generate more meaningful test cases and assertions based on the route's purpose and access level.
+
 ## Troubleshooting
 
 - **Permission errors**: Run via `node ./dist/cli.js <command>`
@@ -134,5 +181,3 @@ For your own fork:
 ## License
 
 MIT © [Marios Gavriil](https://github.com/mikopos)
-
-

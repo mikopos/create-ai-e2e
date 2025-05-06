@@ -6,14 +6,12 @@ import path from "path";
 export async function initProject() {
   console.log("🔧 Installing Playwright browsers…");
   try {
-    // Step 1: install browsers
     await execa("npx", ["playwright", "install"], { stdio: "inherit" });
   } catch (e) {
     console.error("❌ Failed to install Playwright browsers", e);
     process.exit(1);
   }
 
-  // Step 2: scaffold config
   const configPath = path.resolve(process.cwd(), "playwright.config.ts");
   if (fs.existsSync(configPath)) {
     console.log("⚠️  playwright.config.ts already exists, skipping");

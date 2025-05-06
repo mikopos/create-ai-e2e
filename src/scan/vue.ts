@@ -14,13 +14,11 @@ export async function scanVue(rootDir: string): Promise<string[]> {
 
   const routes = new Set<string>();
 
-  // 1) Scan .vue for <router-link to="...">
   for (const file of vueFiles) {
     const content = fs.readFileSync(file, "utf8");
     const {descriptor} = parseSFC(content);
     if (!descriptor.template) continue;
 
-    // crude regex to catch to="..." in templates
     const matches = descriptor.template.content.matchAll(
         /<router-link\s+[^>]*to\s*=\s*["']([^"']+)["']/g
     );
@@ -29,7 +27,6 @@ export async function scanVue(rootDir: string): Promise<string[]> {
     }
   }
 
-  // 2) Scan router config files for { path: '...' } entries
   for (const file of routerFiles) {
     const code = fs.readFileSync(file, "utf8");
     const ast = parse(code, {

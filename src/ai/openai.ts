@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 
-// Initialize OpenAI client with your API key from env var
-const client = new OpenAI({ 
+const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY 
 });
 
@@ -25,17 +24,14 @@ export async function enrichAssertionsOpenAI(componentSrc: string): Promise<stri
       `Return 2 Playwright assertion lines that would verify it works.\n` +
       `Only code, no prose:\n\n${componentSrc}`;
 
-  // Send the chat completion request
   const response = await client.chat.completions.create({
     model: "o4-mini",
     messages: [{ role: "user", content: prompt }],
     max_tokens: 120
   });
 
-  // Extract the generated text
   const raw = response.choices?.[0]?.message?.content ?? "";
 
-  // Split into lines and return only those starting with "await"
   return raw
   .split("\n")
   .map(line => line.trim())

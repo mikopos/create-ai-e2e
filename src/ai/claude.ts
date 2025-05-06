@@ -1,7 +1,6 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 
-// Initialize Anthropic client with your API key
-const client = new Anthropic({ 
+const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY 
 });
 
@@ -21,23 +20,18 @@ export async function enrichAssertions(componentSrc: string): Promise<string[]> 
     return [];
   }
 
-  // Build the prompt for Claude
   const prompt = `Here is a React/Vue component.\n` +
       `Return 2 Playwright assertion lines that would verify it works.\n` +
       `Only code, no prose:\n\n${componentSrc}`;
 
-  // Send the completion request
   const response = await client.completions.create({
     model: "claude-3.7",
     prompt,
     max_tokens_to_sample: 120,
   });
 
-  // Extract the generated content from the response
-  // Depending on SDK version, content may be under .completion or .choices[0].message.content
   const raw = response.completion;
 
-  // Split into lines and return only those starting with "await"
   return raw
   .split("\n")
   .map((line) => line.trim())

@@ -22,7 +22,6 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
   const files = globSync(pattern, { cwd: rootDir, absolute: true });
   const routes = new Map<string, Route>();
 
-  // Regex patterns for different route definitions
   const patterns = {
     // Direct Route components
     routeComponent: /<\s*Route[^>]*path\s*=\s*["'](.*?)["'][^>]*>/g,
@@ -46,7 +45,6 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
 
       const code = fs.readFileSync(file, "utf8");
       
-      // 1. Find direct Route components
       const routeMatches = code.match(patterns.routeComponent);
       if (routeMatches) {
         for (const match of routeMatches) {
@@ -59,7 +57,6 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
         }
       }
 
-      // 2. Find route constants
       const constMatches = code.match(patterns.routeConst);
       if (constMatches) {
         for (const match of constMatches) {
@@ -78,17 +75,14 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
         }
       }
 
-      // 3. Find RoutingProvider usage
       const providerMatches = code.match(patterns.routingProvider);
       if (providerMatches) {
         for (const match of providerMatches) {
           const routesContent = match.match(/{([^}]+)}/)?.[1];
           if (routesContent) {
-            // Extract route variable name
             const routeVarMatch = routesContent.match(/\b(\w+)\b/);
             if (routeVarMatch) {
               const routeVar = routeVarMatch[1];
-              // Find the route variable definition
               const routeDefRegex = new RegExp(`(?:const|let|var)\\s+${routeVar}\\s*=\\s*\\[(([\\s\\S])*?)\\]`);
               const routeDef = code.match(routeDefRegex);
               if (routeDef) {
@@ -124,7 +118,6 @@ function extractTags(code: string, routeMatch: string): string[] {
   const lines = code.split('\n');
   const routeLine = lines.findIndex(line => line.includes(routeMatch));
   
-  // Look for tags in comments above the route
   for (let i = routeLine - 1; i >= 0; i--) {
     const line = lines[i].trim();
     if (!line.startsWith('//')) break;
@@ -139,63 +132,5 @@ function extractTags(code: string, routeMatch: string): string[] {
   return tags;
 }
 
-// Example usage:
 const routes = await scanReact('/path/to/src');
 console.log('Found routes:', routes);
-
-// Example route definitions that will be detected:
-
-// 1. Direct Route components
-/*
-<Route path="/home" component={Home} />
-*/
-
-// 2. Route constants
-/*
-const routes = [
-  { path: '/dashboard', component: Dashboard },
-  { path: '/profile', component: Profile }
-];
-*/
-
-// 3. RoutingProvider usage
-/*
-const appRoutes = [
-  // @tags public,main
-  { path: '/about', component: About },
-  // @tags private,admin
-  { path: '/admin', component: Admin }
-];
-
-<RoutingProvider routes={appRoutes}>
-  <App />
-</RoutingProvider>
-*/
-
-// 4. Nested routes
-/*
-const routes = [
-  {
-    path: '/app',
-    component: AppLayout,
-    children: [
-      { path: '/dashboard', component: Dashboard },
-      { path: '/settings', component: Settings }
-    ]
-  }
-];
-*/
-
-// 5. Route objects with metadata
-/*
-const routes = [
-  {
-    path: '/products',
-    component: Products,
-    meta: {
-      auth: true,
-      roles: ['admin']
-    }
-  }
-];
-*/

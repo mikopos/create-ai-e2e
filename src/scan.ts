@@ -18,7 +18,6 @@ export async function scanProject(
 ): Promise<void> {
   const abs = path.resolve(process.cwd(), srcDir);
 
-  // If the given path doesn't exist but a 'src' subfolder does, assume project root was passed
   let scanDir = abs;
   try {
     if (!fs.existsSync(scanDir) || !fs.statSync(scanDir).isDirectory()) {
@@ -35,12 +34,10 @@ export async function scanProject(
     process.exit(1);
   }
 
-  // Discover routes
   const routes: string[] = isVue
     ? await scanVue(scanDir)
     : await scanReact(scanDir);
 
-  // Output results
   if (outputJson) {
     console.log(JSON.stringify(routes, null, 2));
   } else {
