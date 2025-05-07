@@ -8,7 +8,6 @@ test("/about renders", async ({ page }) => {
     // Wait for the body to be visible
     await expect(page.locator("body")).toBeVisible({ timeout: 10000 });
   } catch (error) {
-    console.error("Test failed:", error);
     throw error;
   }
 });

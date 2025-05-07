@@ -4,6 +4,12 @@ import { scanReact } from "./scan/react.js";
 import { scanVue } from "./scan/vue.js";
 import fs from "fs";
 
+interface Route {
+  path: string;
+  component?: string;
+  tags?: string[];
+}
+
 /**
  * Scan project for route paths and output them.
  *
@@ -34,7 +40,7 @@ export async function scanProject(
     process.exit(1);
   }
 
-  const routes: string[] = isVue
+  const routes: Route[] = isVue
     ? await scanVue(scanDir)
     : await scanReact(scanDir);
 
@@ -45,7 +51,7 @@ export async function scanProject(
     if (routes.length === 0) {
       console.log("  (no routes found)");
     } else {
-      routes.forEach(r => console.log("  •", r));
+      routes.forEach(r => console.log("  •", r.path));
     }
   }
 }

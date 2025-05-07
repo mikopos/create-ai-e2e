@@ -5,14 +5,20 @@ import { sync as globSync } from "glob";
 import {parse} from "@babel/parser";
 import traverse from "@babel/traverse";
 
-export async function scanVue(rootDir: string): Promise<string[]> {
+interface Route {
+  path: string;
+  component?: string;
+  tags?: string[];
+}
+
+export async function scanVue(rootDir: string): Promise<Route[]> {
   const vueFiles = globSync("**/*.vue", {cwd: rootDir, absolute: true});
   const routerFiles = globSync("router/**/*.{js,ts}", {
     cwd: rootDir,
     absolute: true,
   });
 
-  const routes = new Set<string>();
+  const routes = new Map<string, Route>();
 
   for (const file of vueFiles) {
     const content = fs.readFileSync(file, "utf8");
@@ -23,7 +29,10 @@ export async function scanVue(rootDir: string): Promise<string[]> {
         /<router-link\s+[^>]*to\s*=\s*["']([^"']+)["']/g
     );
     for (const m of matches) {
-      routes.add(m[1]);
+      const path = m[1];
+      if (path && !path.startsWith(":")) {
+        routes.set(path, { path });
+      }
     }
   }
 
@@ -43,13 +52,15 @@ export async function scanVue(rootDir: string): Promise<string[]> {
         ) {
           const val = propPath.node.value;
           if (val.type === "StringLiteral") {
-            routes.add(val.value);
+            const path = val.value;
+            if (path && !path.startsWith(":")) {
+              routes.set(path, { path });
+            }
           }
         }
       },
     });
   }
 
-  // 3) Filter out empties and return
-  return Array.from(routes).filter((p) => p && !p.startsWith(":"));
+  return Array.from(routes.values());
 }
