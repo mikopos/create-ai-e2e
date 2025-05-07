@@ -167,12 +167,6 @@ These tags help the scanner generate more meaningful test cases and assertions b
 
 ## Publishing
 
-To publish a new version:
-
-1. Update version in `package.json`
-2. Create a new GitHub release with matching version
-3. The workflow will automatically publish to npm
-
 For your own fork:
 1. Create npm account
 2. Generate npm access token with publish permissions
