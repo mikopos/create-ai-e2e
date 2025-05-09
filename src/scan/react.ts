@@ -20,6 +20,7 @@ interface RoutesObject {
  * 2. Route constants used with RoutingProvider
  * 3. Route arrays or objects
  * 4. Routes defined in routes.tsx with RoutesObject type
+ * 5. Routes used with createHashRouter in RouterProvider
  * 
  * @param rootDir - Absolute path to the project's src folder
  * @returns A list of discovered routes with their paths and metadata
@@ -30,28 +31,24 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
   const routes = new Map<string, Route>();
 
   const patterns = {
-    // Direct Route components
     routeComponent: /<\s*Route[^>]*path\s*=\s*["'](.*?)["'][^>]*>/g,
     pathProp: /path\s*=\s*["'](.*?)["']/,
     
-    // Route constants
     routeConst: /(?:const|let|var)\s+(\w+)\s*=\s*\[([\s\S]*?)\](?:\s*;|\s*$)/g,
     routeObject: /\{\s*path\s*:\s*["'](.*?)["']/g,
     
-    // RoutingProvider usage
     routingProvider: /<\s*RoutingProvider[^>]*routes\s*=\s*{([^}]+)}[^>]*>/g,
     
-    // Route tags in comments
     routeTags: /\/\/\s*@tags\s*([^\n]+)/g,
 
-    // RoutesObject type definition
     routesObjectType: /type\s+RoutesObject\s*=\s*\{([^}]+)\}/g,
     
-    // Routes constant with RoutesObject type
     routesConst: /(?:const|let|var)\s+(\w+)\s*:\s*RoutesObject\s*\[\s*\]\s*=\s*\[([\s\S]*?)\](?:\s*;|\s*$)/g,
     
-    // RouterProvider usage
-    routerProvider: /<\s*RouterProvider[^>]*router\s*=\s*{([^}]+)}[^>]*>/g
+    routerProvider: /<\s*RouterProvider[^>]*router\s*=\s*{([^}]+)}[^>]*>/g,
+
+    // New pattern for createHashRouter
+    createHashRouter: /createHashRouter\(([^)]+)\)/g
   };
 
   for (const file of files) {
@@ -119,42 +116,20 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
         }
       }
 
-      // Scan for routes.tsx pattern
-      if (file.endsWith('routes.tsx')) {
-        // Look for RoutesObject type definition
-        const typeMatch = code.match(patterns.routesObjectType);
-        if (typeMatch) {
-          // Look for routes constant with RoutesObject type
-          const routesConstMatch = code.match(patterns.routesConst);
-          if (routesConstMatch) {
-            const routesArray = routesConstMatch[2];
-            const routeObjects = routesArray.match(patterns.routeObject);
-            if (routeObjects) {
-              for (const obj of routeObjects) {
-                const pathMatch = obj.match(/path\s*:\s*["'](.*?)["']/);
-                if (pathMatch?.[1]) {
-                  const path = pathMatch[1].trim();
-                  const tags = extractTags(code, obj);
-                  routes.set(path, { path, tags });
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // Scan for RouterProvider usage
+      // Scan for RouterProvider with createHashRouter
       const routerProviderMatches = code.match(patterns.routerProvider);
       if (routerProviderMatches) {
         for (const match of routerProviderMatches) {
           const routerContent = match.match(/{([^}]+)}/)?.[1];
           if (routerContent) {
-            const createRouteMatch = routerContent.match(/createRoute\(([^)]+)\)/);
-            if (createRouteMatch) {
-              const routesVarMatch = createRouteMatch[1].match(/\b(\w+)\b/);
+            // Check for createHashRouter
+            const hashRouterMatch = routerContent.match(patterns.createHashRouter);
+            if (hashRouterMatch) {
+              const routesVarMatch = hashRouterMatch[1].match(/\b(\w+)\b/);
               if (routesVarMatch) {
                 const routesVar = routesVarMatch[1];
-                const routeDefRegex = new RegExp(`(?:const|let|var)\\s+${routesVar}\\s*:\\s*RoutesObject\\s*\\[\\s*\\]\\s*=\\s*\\[(([\\s\\S])*?)\\]`);
+                // Look for routes constant in the same file
+                const routeDefRegex = new RegExp(`(?:const|let|var)\\s+${routesVar}\\s*=\\s*\\[(([\\s\\S])*?)\\]`);
                 const routeDef = code.match(routeDefRegex);
                 if (routeDef) {
                   const routeObjects = routeDef[1].match(patterns.routeObject);
@@ -168,6 +143,47 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
                       }
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Scan for routes.tsx pattern
+      if (file.endsWith('routes.tsx')) {
+        // Look for simple routes constant without type
+        const simpleRoutesMatch = code.match(/(?:const|let|var)\s+(\w+)\s*=\s*\[([\s\S]*?)\](?:\s*;|\s*$)/g);
+        if (simpleRoutesMatch) {
+          for (const match of simpleRoutesMatch) {
+            const routeObjects = match.match(patterns.routeObject);
+            if (routeObjects) {
+              for (const obj of routeObjects) {
+                const pathMatch = obj.match(/path\s*:\s*["'](.*?)["']/);
+                if (pathMatch?.[1]) {
+                  const path = pathMatch[1].trim();
+                  const tags = extractTags(code, obj);
+                  routes.set(path, { path, tags });
+                }
+              }
+            }
+          }
+        }
+
+        // Existing RoutesObject type scanning
+        const typeMatch = code.match(patterns.routesObjectType);
+        if (typeMatch) {
+          const routesConstMatch = code.match(patterns.routesConst);
+          if (routesConstMatch) {
+            const routesArray = routesConstMatch[2];
+            const routeObjects = routesArray.match(patterns.routeObject);
+            if (routeObjects) {
+              for (const obj of routeObjects) {
+                const pathMatch = obj.match(/path\s*:\s*["'](.*?)["']/);
+                if (pathMatch?.[1]) {
+                  const path = pathMatch[1].trim();
+                  const tags = extractTags(code, obj);
+                  routes.set(path, { path, tags });
                 }
               }
             }
