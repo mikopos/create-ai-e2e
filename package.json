@@ -1,6 +1,6 @@
 {
   "name": "create-ai-e2e",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "E2E frontend tests generator",
   "main": "index.js",
   "bin": {
