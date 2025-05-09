@@ -47,7 +47,6 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
     
     routerProvider: /<\s*RouterProvider[^>]*router\s*=\s*{([^}]+)}[^>]*>/g,
 
-    // New pattern for createHashRouter
     createHashRouter: /createHashRouter\(([^)]+)\)/g
   };
 
@@ -58,6 +57,7 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
 
       const code = fs.readFileSync(file, "utf8");
       
+      // Scan for Route components
       const routeMatches = code.match(patterns.routeComponent);
       if (routeMatches) {
         for (const match of routeMatches) {
@@ -70,24 +70,28 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
         }
       }
 
+      // Scan for route constants
       const constMatches = code.match(patterns.routeConst);
       if (constMatches) {
         for (const match of constMatches) {
           const routeArray = match[2];
-          const objectMatches = routeArray.match(patterns.routeObject);
-          if (objectMatches) {
-            for (const objMatch of objectMatches) {
-              const pathMatch = objMatch.match(/path\s*:\s*["'](.*?)["']/);
-              if (pathMatch?.[1]) {
-                const path = pathMatch[1].trim();
-                const tags = extractTags(code, objMatch);
-                routes.set(path, { path, tags });
+          if (routeArray) {
+            const objectMatches = routeArray.match(patterns.routeObject);
+            if (objectMatches) {
+              for (const objMatch of objectMatches) {
+                const pathMatch = objMatch.match(/path\s*:\s*["'](.*?)["']/);
+                if (pathMatch?.[1]) {
+                  const path = pathMatch[1].trim();
+                  const tags = extractTags(code, objMatch);
+                  routes.set(path, { path, tags });
+                }
               }
             }
           }
         }
       }
 
+      // Scan for RoutingProvider usage
       const providerMatches = code.match(patterns.routingProvider);
       if (providerMatches) {
         for (const match of providerMatches) {
@@ -98,7 +102,7 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
               const routeVar = routeVarMatch[1];
               const routeDefRegex = new RegExp(`(?:const|let|var)\\s+${routeVar}\\s*=\\s*\\[(([\\s\\S])*?)\\]`);
               const routeDef = code.match(routeDefRegex);
-              if (routeDef) {
+              if (routeDef?.[1]) {
                 const routeObjects = routeDef[1].match(patterns.routeObject);
                 if (routeObjects) {
                   for (const obj of routeObjects) {
@@ -131,7 +135,7 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
                 // Look for routes constant in the same file
                 const routeDefRegex = new RegExp(`(?:const|let|var)\\s+${routesVar}\\s*=\\s*\\[(([\\s\\S])*?)\\]`);
                 const routeDef = code.match(routeDefRegex);
-                if (routeDef) {
+                if (routeDef?.[1]) {
                   const routeObjects = routeDef[1].match(patterns.routeObject);
                   if (routeObjects) {
                     for (const obj of routeObjects) {
@@ -174,7 +178,7 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
         const typeMatch = code.match(patterns.routesObjectType);
         if (typeMatch) {
           const routesConstMatch = code.match(patterns.routesConst);
-          if (routesConstMatch) {
+          if (routesConstMatch?.[2]) {
             const routesArray = routesConstMatch[2];
             const routeObjects = routesArray.match(patterns.routeObject);
             if (routeObjects) {
@@ -205,6 +209,8 @@ function extractTags(code: string, routeMatch: string): string[] {
   const tags: string[] = [];
   const lines = code.split('\n');
   const routeLine = lines.findIndex(line => line.includes(routeMatch));
+  
+  if (routeLine === -1) return tags;
   
   for (let i = routeLine - 1; i >= 0; i--) {
     const line = lines[i].trim();
