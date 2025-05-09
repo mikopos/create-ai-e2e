@@ -77,6 +77,7 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
       const constMatches = code.match(patterns.routeConst);
       if (constMatches) {
         for (const match of constMatches) {
+          if (!match) continue;
           const routeArray = match[2];
           if (routeArray) {
             const objectMatches = routeArray.match(patterns.routeObject);
@@ -98,6 +99,7 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
       const routerProviderMatches = code.match(patterns.routerProvider);
       if (routerProviderMatches) {
         for (const match of routerProviderMatches) {
+          if (!match) continue;
           const routerContent = match.match(/{([^}]+)}/)?.[1];
           if (routerContent) {
             // Check for createHashRouter
@@ -129,6 +131,7 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
                   const importMatches = code.match(patterns.importRoutes);
                   if (importMatches) {
                     for (const importMatch of importMatches) {
+                      if (!importMatch) continue;
                       const importPath = importMatch.match(/from\s+['"]([^'"]+)['"]/)?.[1];
                       if (importPath) {
                         // Try to resolve the imported file
@@ -136,7 +139,7 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
                         if (importedFilePath) {
                           try {
                             const importedCode = fs.readFileSync(importedFilePath, 'utf8');
-                            const importedRouteDef = importedCode.match(/(?:export\s+default\s+)?(?:const|let|var)\s+(\w+)\s*=\s*\[(([\s\S])*?)\]/);
+                            const importedRouteDef = importedCode.match(/(?:export\s+default\s+)?(?:const|let|var)\s+(\w+)\s*=\s*\[([\s\S]*?)\]/);
                             if (importedRouteDef?.[2]) {
                               const routeObjects = importedRouteDef[2].match(patterns.routeObject);
                               if (routeObjects) {
@@ -289,6 +292,3 @@ function extractTags(code: string, routeMatch: string): string[] {
   
   return tags;
 }
-
-const routes = await scanReact('/path/to/src');
-console.log('Found routes:', routes);
