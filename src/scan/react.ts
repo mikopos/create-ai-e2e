@@ -6,6 +6,7 @@ interface Route {
   path: string;
   component?: string;
   tags?: string[];
+  children?: Route[];
 }
 
 interface RoutesObject {
@@ -21,6 +22,9 @@ interface RoutesObject {
  * 3. Route arrays or objects
  * 4. Routes defined in routes.tsx with RoutesObject type
  * 5. Routes used with createHashRouter in RouterProvider
+ * 6. Routes defined in createBrowserRouter
+ * 7. Routes defined in createMemoryRouter
+ * 8. Routes defined in createRoutesFromElements
  * 
  * @param rootDir - Absolute path to the project's src folder
  * @returns A list of discovered routes with their paths and metadata
@@ -31,26 +35,34 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
   const routes = new Map<string, Route>();
 
   const patterns = {
+    // Route component patterns
     routeComponent: /<\s*Route[^>]*path\s*=\s*["'](.*?)["'][^>]*>/g,
     pathProp: /path\s*=\s*["'](.*?)["']/,
+    elementProp: /element\s*=\s*{([^}]+)}/,
     
+    // Route array patterns
     routeConst: /(?:const|let|var)\s+(\w+)\s*=\s*\[([\s\S]*?)\](?:\s*;|\s*$)/g,
     routeObject: /\{\s*path\s*:\s*["'](.*?)["']/g,
     
+    // Router provider patterns
     routingProvider: /<\s*RoutingProvider[^>]*routes\s*=\s*{([^}]+)}[^>]*>/g,
-    
-    routeTags: /\/\/\s*@tags\s*([^\n]+)/g,
-
-    routesObjectType: /type\s+RoutesObject\s*=\s*\{([^}]+)\}/g,
-    
-    routesConst: /(?:const|let|var)\s+(\w+)\s*:\s*RoutesObject\s*\[\s*\]\s*=\s*\[([\s\S]*?)\](?:\s*;|\s*$)/g,
-    
     routerProvider: /<\s*RouterProvider[^>]*router\s*=\s*{([^}]+)}[^>]*>/g,
-
+    
+    // Router creation patterns
     createHashRouter: /createHashRouter\(([^)]+)\)/g,
-
-    // New pattern for imported routes
-    importRoutes: /import\s+(?:\{[^}]*\}|\w+)\s+from\s+['"]([^'"]+)['"]/g
+    createBrowserRouter: /createBrowserRouter\(([^)]+)\)/g,
+    createMemoryRouter: /createMemoryRouter\(([^)]+)\)/g,
+    createRoutesFromElements: /createRoutesFromElements\(([^)]+)\)/g,
+    
+    // Import patterns
+    importRoutes: /import\s+(?:\{[^}]*\}|\w+)\s+from\s+['"]([^'"]+)['"]/g,
+    
+    // Tag patterns
+    routeTags: /\/\/\s*@tags\s*([^\n]+)/g,
+    
+    // Type patterns
+    routesObjectType: /type\s+RoutesObject\s*=\s*\{([^}]+)\}/g,
+    routesConst: /(?:const|let|var)\s+(\w+)\s*:\s*RoutesObject\s*\[\s*\]\s*=\s*\[([\s\S]*?)\](?:\s*;|\s*$)/g,
   };
 
   for (const file of files) {
@@ -67,8 +79,10 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
           const pathMatch = match.match(patterns.pathProp);
           if (pathMatch?.[1]) {
             const path = pathMatch[1].trim();
+            const elementMatch = match.match(patterns.elementProp);
+            const component = elementMatch?.[1]?.trim();
             const tags = extractTags(code, match);
-            routes.set(path, { path, tags });
+            routes.set(path, { path, component, tags });
           }
         }
       }
@@ -87,7 +101,8 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
                 if (pathMatch?.[1]) {
                   const path = pathMatch[1].trim();
                   const tags = extractTags(code, objMatch);
-                  routes.set(path, { path, tags });
+                  const children = extractChildren(routeArray, objMatch);
+                  routes.set(path, { path, tags, children });
                 }
               }
             }
@@ -95,98 +110,87 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
         }
       }
 
-      // Scan for RouterProvider with createHashRouter
-      const routerProviderMatches = code.match(patterns.routerProvider);
-      if (routerProviderMatches) {
-        for (const match of routerProviderMatches) {
-          if (!match) continue;
-          const routerContent = match.match(/{([^}]+)}/)?.[1];
-          if (routerContent) {
-            // Check for createHashRouter
-            const hashRouterMatch = routerContent.match(patterns.createHashRouter);
-            if (hashRouterMatch) {
-              const routesVarMatch = hashRouterMatch[1].match(/\b(\w+)\b/);
-              if (routesVarMatch) {
-                const routesVar = routesVarMatch[1];
-                
-                // First try to find routes in the same file
-                const routeDefRegex = new RegExp(`(?:const|let|var)\\s+${routesVar}\\s*=\\s*\\[(([\\s\\S])*?)\\]`);
-                const routeDef = code.match(routeDefRegex);
-                
-                if (routeDef?.[1]) {
-                  // Routes defined in the same file
-                  const routeObjects = routeDef[1].match(patterns.routeObject);
-                  if (routeObjects) {
-                    for (const obj of routeObjects) {
-                      const pathMatch = obj.match(/path\s*:\s*["'](.*?)["']/);
-                      if (pathMatch?.[1]) {
-                        const path = pathMatch[1].trim();
-                        const tags = extractTags(code, obj);
-                        routes.set(path, { path, tags });
-                      }
-                    }
-                  }
-                } else {
-                  // Look for imported routes
-                  const importMatches = code.match(patterns.importRoutes);
-                  if (importMatches) {
-                    for (const importMatch of importMatches) {
-                      if (!importMatch) continue;
-                      const importPath = importMatch.match(/from\s+['"]([^'"]+)['"]/)?.[1];
-                      if (importPath) {
-                        // Try to resolve the imported file
-                        const importedFilePath = resolveImportPath(file, importPath);
-                        if (importedFilePath) {
-                          try {
-                            const importedCode = fs.readFileSync(importedFilePath, 'utf8');
-                            const importedRouteDef = importedCode.match(/(?:export\s+default\s+)?(?:const|let|var)\s+(\w+)\s*=\s*\[([\s\S]*?)\]/);
-                            if (importedRouteDef?.[2]) {
-                              const routeObjects = importedRouteDef[2].match(patterns.routeObject);
-                              if (routeObjects) {
-                                for (const obj of routeObjects) {
-                                  const pathMatch = obj.match(/path\s*:\s*["'](.*?)["']/);
-                                  if (pathMatch?.[1]) {
-                                    const path = pathMatch[1].trim();
-                                    const tags = extractTags(importedCode, obj);
-                                    routes.set(path, { path, tags });
-                                  }
-                                }
-                              }
-                            }
-                          } catch (error) {
-                            console.error(`Error reading imported file ${importedFilePath}:`, error);
+      // Scan for router providers
+      const routerProviders = [
+        patterns.routerProvider,
+        patterns.routingProvider
+      ];
+
+      for (const providerPattern of routerProviders) {
+        const providerMatches = code.match(providerPattern);
+        if (providerMatches) {
+          for (const match of providerMatches) {
+            if (!match) continue;
+            const routerContent = match.match(/{([^}]+)}/)?.[1];
+            if (routerContent) {
+              // Check for various router creation methods
+              const routerPatterns = [
+                patterns.createHashRouter,
+                patterns.createBrowserRouter,
+                patterns.createMemoryRouter,
+                patterns.createRoutesFromElements
+              ];
+
+              for (const routerPattern of routerPatterns) {
+                const routerMatch = routerContent.match(routerPattern);
+                if (routerMatch) {
+                  const routesVarMatch = routerMatch[1].match(/\b(\w+)\b/);
+                  if (routesVarMatch) {
+                    const routesVar = routesVarMatch[1];
+                    
+                    // First try to find routes in the same file
+                    const routeDefRegex = new RegExp(`(?:const|let|var)\\s+${routesVar}\\s*=\\s*\\[(([\\s\\S])*?)\\]`);
+                    const routeDef = code.match(routeDefRegex);
+                    
+                    if (routeDef?.[1]) {
+                      // Routes defined in the same file
+                      const routeObjects = routeDef[1].match(patterns.routeObject);
+                      if (routeObjects) {
+                        for (const obj of routeObjects) {
+                          const pathMatch = obj.match(/path\s*:\s*["'](.*?)["']/);
+                          if (pathMatch?.[1]) {
+                            const path = pathMatch[1].trim();
+                            const tags = extractTags(code, obj);
+                            const children = extractChildren(routeDef[1], obj);
+                            routes.set(path, { path, tags, children });
                           }
                         }
                       }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // Scan for RoutingProvider usage
-      const providerMatches = code.match(patterns.routingProvider);
-      if (providerMatches) {
-        for (const match of providerMatches) {
-          const routesContent = match.match(/{([^}]+)}/)?.[1];
-          if (routesContent) {
-            const routeVarMatch = routesContent.match(/\b(\w+)\b/);
-            if (routeVarMatch) {
-              const routeVar = routeVarMatch[1];
-              const routeDefRegex = new RegExp(`(?:const|let|var)\\s+${routeVar}\\s*=\\s*\\[(([\\s\\S])*?)\\]`);
-              const routeDef = code.match(routeDefRegex);
-              if (routeDef?.[1]) {
-                const routeObjects = routeDef[1].match(patterns.routeObject);
-                if (routeObjects) {
-                  for (const obj of routeObjects) {
-                    const pathMatch = obj.match(/path\s*:\s*["'](.*?)["']/);
-                    if (pathMatch?.[1]) {
-                      const path = pathMatch[1].trim();
-                      const tags = extractTags(code, obj);
-                      routes.set(path, { path, tags });
+                    } else {
+                      // Look for imported routes
+                      const importMatches = code.match(patterns.importRoutes);
+                      if (importMatches) {
+                        for (const importMatch of importMatches) {
+                          if (!importMatch) continue;
+                          const importPath = importMatch.match(/from\s+['"]([^'"]+)['"]/)?.[1];
+                          if (importPath) {
+                            // Try to resolve the imported file
+                            const importedFilePath = resolveImportPath(file, importPath);
+                            if (importedFilePath) {
+                              try {
+                                const importedCode = fs.readFileSync(importedFilePath, 'utf8');
+                                const importedRouteDef = importedCode.match(/(?:export\s+default\s+)?(?:const|let|var)\s+(\w+)\s*=\s*\[([\s\S]*?)\]/);
+                                if (importedRouteDef?.[2]) {
+                                  const routeObjects = importedRouteDef[2].match(patterns.routeObject);
+                                  if (routeObjects) {
+                                    for (const obj of routeObjects) {
+                                      const pathMatch = obj.match(/path\s*:\s*["'](.*?)["']/);
+                                      if (pathMatch?.[1]) {
+                                        const path = pathMatch[1].trim();
+                                        const tags = extractTags(importedCode, obj);
+                                        const children = extractChildren(importedRouteDef[2], obj);
+                                        routes.set(path, { path, tags, children });
+                                      }
+                                    }
+                                  }
+                                }
+                              } catch (error) {
+                                console.error(`Error reading imported file ${importedFilePath}:`, error);
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -209,7 +213,8 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
                 if (pathMatch?.[1]) {
                   const path = pathMatch[1].trim();
                   const tags = extractTags(code, obj);
-                  routes.set(path, { path, tags });
+                  const children = extractChildren(match, obj);
+                  routes.set(path, { path, tags, children });
                 }
               }
             }
@@ -229,7 +234,8 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
                 if (pathMatch?.[1]) {
                   const path = pathMatch[1].trim();
                   const tags = extractTags(code, obj);
-                  routes.set(path, { path, tags });
+                  const children = extractChildren(routesArray, obj);
+                  routes.set(path, { path, tags, children });
                 }
               }
             }
@@ -291,4 +297,31 @@ function extractTags(code: string, routeMatch: string): string[] {
   }
   
   return tags;
+}
+
+/**
+ * Extract children routes from a route object
+ */
+function extractChildren(routeArray: string, routeMatch: string): Route[] | undefined {
+  const children: Route[] = [];
+  const childrenMatch = routeMatch.match(/children\s*:\s*\[([\s\S]*?)\]/);
+  
+  if (childrenMatch?.[1]) {
+    const childrenArray = childrenMatch[1];
+    const childObjects = childrenArray.match(/\{\s*path\s*:\s*["'](.*?)["']/g);
+    
+    if (childObjects) {
+      for (const child of childObjects) {
+        const pathMatch = child.match(/path\s*:\s*["'](.*?)["']/);
+        if (pathMatch?.[1]) {
+          const path = pathMatch[1].trim();
+          const tags = extractTags(routeArray, child);
+          const grandChildren = extractChildren(childrenArray, child);
+          children.push({ path, tags, children: grandChildren });
+        }
+      }
+    }
+  }
+  
+  return children.length > 0 ? children : undefined;
 }
