@@ -1,7 +1,7 @@
 // src/scan/react/index.ts
 import fs from "fs";
 import { sync as globSync } from "glob";
-import { patterns } from "./patterns";
+import { patterns } from "./react/patterns";
 
 interface Route {
   path: string;
