@@ -345,7 +345,7 @@ export function parseRouterProviders(code: string, file: string, routes: Map<str
                             if (routesVarMatch) {
                                 const routesVar = routesVarMatch[1];
                                 console.log(`  Looking for routes variable: ${routesVar}`);
-                                const routeDefRegex = new RegExp(`(?:const|let|var)\s+${routesVar}\s*=\s*\[(([\s\S])*?)\]`);
+                                const routeDefRegex = new RegExp(`(?:const|let|var)\s+${routesVar}\s*=\s*\[(([s\S]*?)\]`);
                                 const routeDef = code.match(routeDefRegex);
                                 if (routeDef?.[1]) {
                                     console.log(`  Found routes definition in same file`);
