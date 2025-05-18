@@ -2,6 +2,7 @@
 // src/scan/react/index.ts
 import fs from "fs";
 import { sync as globSync } from "glob";
+import logger from "../../logger";
 // patterns, resolveImportPath, extractTags, extractChildren are used by parsers.ts
 // They are not directly used in this file anymore but kept for potential direct use or clarity.
 import "./patterns"; 
@@ -45,20 +46,20 @@ export interface RoutesObject { // Exported
  * @returns A list of discovered routes with their paths and metadata
  */
 export async function scanReact(rootDir: string): Promise<Route[]> {
-  console.log(`🔍 Starting scan in directory: ${rootDir}`);
+  logger.info(`🔍 Starting scan in directory: ${rootDir}`);
 
   // Verify directory exists
   if (!fs.existsSync(rootDir)) {
-    console.error(`❌ Directory does not exist: ${rootDir}`);
+    logger.error(`❌ Directory does not exist: ${rootDir}`);
     return [];
   }
 
   const pattern = "**/*.{js,jsx,ts,tsx}";
-  console.log(`🔍 Using glob pattern: ${pattern}`);
+  logger.info(`🔍 Using glob pattern: ${pattern}`);
 
   const files = globSync(pattern, { cwd: rootDir, absolute: true });
-  console.log(`📁 Found ${files.length} files to scan:`);
-  files.forEach(file => console.log(`   - ${file}`));
+  logger.info(`📁 Found ${files.length} files to scan:`);
+  files.forEach(file => logger.info(`   - ${file}`));
 
   const routes = new Map<string, Route>();
 
@@ -66,25 +67,25 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
     try {
       const stat = fs.statSync(file);
       if (!stat.isFile()) {
-        console.log(`⏭️  Skipping non-file: ${file}`);
+        logger.info(`⏭️  Skipping non-file: ${file}`);
         continue;
       }
 
-      console.log(`\n📄 Scanning file: ${file}`);
+      logger.info(`\n📄 Scanning file: ${file}`);
       const code = fs.readFileSync(file, "utf8");
 
       // Delegate parsing to specialized functions
-      console.log(`  Checking for exported routes in ${file}`);
+      logger.info(`  Checking for exported routes in ${file}`);
       parseExportedRoutes(code, file, routes);
 
-      console.log(`  Checking for imported routes in ${file}`);
+      logger.info(`  Checking for imported routes in ${file}`);
       parseImportedRoutes(code, file, routes);
       
       parseRouteComponents(code, routes);
       
       parseRouteConstants(code, routes);
 
-      console.log(`  Checking for React Router v6 patterns in ${file}`);
+      logger.info(`  Checking for React Router v6 patterns in ${file}`);
       parseRouteObjectPatterns(code, routes);
       
       // parseRouterProviders needs to be called before parseRoutesFile for some cases
@@ -93,13 +94,13 @@ export async function scanReact(rootDir: string): Promise<Route[]> {
       parseRoutesFile(code, file, routes); 
 
     } catch (error) {
-      console.error(`❌ Error scanning file ${file}:`, error);
+      logger.error({ err: error }, `❌ Error scanning file ${file}`);
     }
   }
 
-  console.log(`\n✅ Scan complete. Found ${routes.size} routes:`);
+  logger.info(`\n✅ Scan complete. Found ${routes.size} routes:`);
   routes.forEach((route, path) => {
-    console.log(`  • ${path}${route.component ? ` (component: ${route.component})` : ''}${route.tags?.length ? ` [tags: ${route.tags.join(', ')}]` : ''}`);
+    logger.info(`  • ${path}${route.component ? ` (component: ${route.component})` : ''}${route.tags?.length ? ` [tags: ${route.tags.join(', ')}]` : ''}`);
   });
 
   return Array.from(routes.values());
