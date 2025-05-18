@@ -25,14 +25,6 @@
               }
             },
             {
-              "id": "no-useless-escape",
-              "helpUri": "https://eslint.org/docs/latest/rules/no-useless-escape",
-              "properties": {},
-              "shortDescription": {
-                "text": "Disallow unnecessary escape characters"
-              }
-            },
-            {
               "id": "no-unused-vars",
               "helpUri": "https://eslint.org/docs/latest/rules/no-unused-vars",
               "properties": {},
@@ -1061,8 +1053,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1086,8 +1077,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1111,8 +1101,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1136,8 +1125,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1161,8 +1149,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1186,8 +1173,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1211,8 +1197,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1236,8 +1221,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1261,8 +1245,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1286,8 +1269,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1311,8 +1293,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1336,8 +1317,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1361,8 +1341,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1386,8 +1365,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1411,8 +1389,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1436,8 +1413,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1461,8 +1437,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1486,8 +1461,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1511,8 +1485,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1536,8 +1509,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1561,8 +1533,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1586,8 +1557,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1611,8 +1581,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1636,8 +1605,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1661,8 +1629,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1686,8 +1653,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1711,8 +1677,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1736,8 +1701,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1761,8 +1725,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1786,8 +1749,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1811,8 +1773,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1836,8 +1797,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1861,8 +1821,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1886,8 +1845,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1911,8 +1869,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1936,8 +1893,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1961,8 +1917,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -1986,8 +1941,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2011,8 +1965,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2036,8 +1989,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2061,8 +2013,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2086,8 +2037,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2111,8 +2061,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2136,8 +2085,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2161,8 +2109,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2186,8 +2133,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2211,8 +2157,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2236,8 +2181,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2261,8 +2205,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2286,8 +2229,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2311,8 +2253,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2336,8 +2277,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2361,8 +2301,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2386,8 +2325,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2411,8 +2349,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2436,8 +2373,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2461,8 +2397,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2486,8 +2421,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2511,8 +2445,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2536,8 +2469,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2561,8 +2493,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2586,8 +2517,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2611,8 +2541,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2636,8 +2565,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2661,8 +2589,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2686,8 +2613,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2711,8 +2637,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2736,8 +2661,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2761,8 +2685,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2786,8 +2709,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2811,8 +2733,7 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "warning",
@@ -2836,191 +2757,10 @@
             }
           ],
           "ruleId": "no-console",
-          "ruleIndex": 0,
-          "suppressions": []
+          "ruleIndex": 0
         },
         {
           "level": "error",
-          "message": {
-            "text": "Unnecessary escape character: \\s."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///Users/margav/IdeaProjects/create-ai-e2e/src/scan/react/parsers.ts",
-                  "index": 12
-                },
-                "region": {
-                  "startLine": 348,
-                  "startColumn": 84,
-                  "endLine": 348,
-                  "endColumn": 85
-                }
-              }
-            }
-          ],
-          "ruleId": "no-useless-escape",
-          "ruleIndex": 2,
-          "suppressions": [
-            {
-              "kind": "inSource",
-              "justification": ""
-            }
-          ]
-        },
-        {
-          "level": "error",
-          "message": {
-            "text": "Unnecessary escape character: \\s."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///Users/margav/IdeaProjects/create-ai-e2e/src/scan/react/parsers.ts",
-                  "index": 12
-                },
-                "region": {
-                  "startLine": 348,
-                  "startColumn": 99,
-                  "endLine": 348,
-                  "endColumn": 100
-                }
-              }
-            }
-          ],
-          "ruleId": "no-useless-escape",
-          "ruleIndex": 2,
-          "suppressions": [
-            {
-              "kind": "inSource",
-              "justification": ""
-            }
-          ]
-        },
-        {
-          "level": "error",
-          "message": {
-            "text": "Unnecessary escape character: \\s."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///Users/margav/IdeaProjects/create-ai-e2e/src/scan/react/parsers.ts",
-                  "index": 12
-                },
-                "region": {
-                  "startLine": 348,
-                  "startColumn": 103,
-                  "endLine": 348,
-                  "endColumn": 104
-                }
-              }
-            }
-          ],
-          "ruleId": "no-useless-escape",
-          "ruleIndex": 2,
-          "suppressions": [
-            {
-              "kind": "inSource",
-              "justification": ""
-            }
-          ]
-        },
-        {
-          "level": "error",
-          "message": {
-            "text": "Unnecessary escape character: \\[."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///Users/margav/IdeaProjects/create-ai-e2e/src/scan/react/parsers.ts",
-                  "index": 12
-                },
-                "region": {
-                  "startLine": 348,
-                  "startColumn": 106,
-                  "endLine": 348,
-                  "endColumn": 107
-                }
-              }
-            }
-          ],
-          "ruleId": "no-useless-escape",
-          "ruleIndex": 2,
-          "suppressions": [
-            {
-              "kind": "inSource",
-              "justification": ""
-            }
-          ]
-        },
-        {
-          "level": "error",
-          "message": {
-            "text": "Unnecessary escape character: \\S."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///Users/margav/IdeaProjects/create-ai-e2e/src/scan/react/parsers.ts",
-                  "index": 12
-                },
-                "region": {
-                  "startLine": 348,
-                  "startColumn": 112,
-                  "endLine": 348,
-                  "endColumn": 113
-                }
-              }
-            }
-          ],
-          "ruleId": "no-useless-escape",
-          "ruleIndex": 2,
-          "suppressions": [
-            {
-              "kind": "inSource",
-              "justification": ""
-            }
-          ]
-        },
-        {
-          "level": "error",
-          "message": {
-            "text": "Unnecessary escape character: \\]."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///Users/margav/IdeaProjects/create-ai-e2e/src/scan/react/parsers.ts",
-                  "index": 12
-                },
-                "region": {
-                  "startLine": 348,
-                  "startColumn": 118,
-                  "endLine": 348,
-                  "endColumn": 119
-                }
-              }
-            }
-          ],
-          "ruleId": "no-useless-escape",
-          "ruleIndex": 2,
-          "suppressions": [
-            {
-              "kind": "inSource",
-              "justification": ""
-            }
-          ]
-        },
-        {
-          "level": "warning",
           "message": {
             "text": "'opts' is defined but never used."
           },
@@ -3041,10 +2781,10 @@
             }
           ],
           "ruleId": "no-unused-vars",
-          "ruleIndex": 3
+          "ruleIndex": 2
         },
         {
-          "level": "warning",
+          "level": "error",
           "message": {
             "text": "'req' is defined but never used."
           },
@@ -3065,7 +2805,7 @@
             }
           ],
           "ruleId": "no-unused-vars",
-          "ruleIndex": 3
+          "ruleIndex": 2
         }
       ]
     }

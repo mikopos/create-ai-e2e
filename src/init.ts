@@ -2,23 +2,24 @@
 import { execa } from "execa";
 import fs from "fs";
 import path from "path";
+import logger from "./logger";
 
 export async function initProject() {
-  console.log("🔧 Installing Playwright browsers…");
+  logger.info("🔧 Installing Playwright browsers…");
   try {
     await execa("npx", ["playwright", "install"], { stdio: "inherit" });
   } catch (e) {
-    console.error("❌ Failed to install Playwright browsers", e);
+    logger.error({ err: e }, "❌ Failed to install Playwright browsers");
     process.exit(1);
   }
 
   const configPath = path.resolve(process.cwd(), "playwright.config.ts");
   if (fs.existsSync(configPath)) {
-    console.log("⚠️  playwright.config.ts already exists, skipping");
+    logger.warn("⚠️  playwright.config.ts already exists, skipping");
     return;
   }
 
-  console.log("📄 Writing playwright.config.ts");
+  logger.info("📄 Writing playwright.config.ts");
   const configContents = `import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
@@ -34,5 +35,5 @@ export default defineConfig({
 });
 `;
   fs.writeFileSync(configPath, configContents, "utf8");
-  console.log("✅ Initialization complete! Run `npx create-ai-e2e scan src/` next.");
+  logger.info("✅ Initialization complete! Run `npx create-ai-e2e scan src/` next.");
 }

@@ -1,3 +1,5 @@
+import logger from "../logger";
+
 export const makeSpec = (
     route: string,
     rootSel = "body",
@@ -10,7 +12,7 @@ test("${route} renders, is accessible, and has no console errors", async ({ page
   const consoleErrors: string[] = [];
   page.on('console', msg => {
     if (msg.type() === 'error') {
-      console.error(\`Playwright Console Error: \${msg.text()}\`);
+      logger.error(\`Playwright Console Error: \${msg.text()}\`);
       consoleErrors.push(\`[Console error]: \${msg.text()}\`);
     }
   });
@@ -26,16 +28,16 @@ test("${route} renders, is accessible, and has no console errors", async ({ page
     .analyze();
   
   if (accessibilityScanResults.violations.length > 0) {
-    console.error("Accessibility violations found:");
+    logger.error("Accessibility violations found:");
     accessibilityScanResults.violations.forEach(violation => {
-      console.error(\`  ID: \${violation.id}\`);
-      console.error(\`  Impact: \${violation.impact}\`);
-      console.error(\`  Description: \${violation.description}\`);
-      console.error(\`  Help: \${violation.help}\`);
-      console.error(\`  Help URL: \${violation.helpUrl}\`);
+      logger.error(\`  ID: \${violation.id}\`);
+      logger.error(\`  Impact: \${violation.impact}\`);
+      logger.error(\`  Description: \${violation.description}\`);
+      logger.error(\`  Help: \${violation.help}\`);
+      logger.error(\`  Help URL: \${violation.helpUrl}\`);
       violation.nodes.forEach(node => {
-        console.error(\`    Node HTML: \${node.html}\`);
-        console.error(\`    Node Target: \${node.target.join(', ')}\`);
+        logger.error(\`    Node HTML: \${node.html}\`);
+        logger.error(\`    Node Target: \${node.target.join(', ')}\`);
       });
     });
   }

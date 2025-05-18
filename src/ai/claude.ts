@@ -1,11 +1,14 @@
 import { Anthropic } from "@anthropic-ai/sdk";
+import logger from "../logger";
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY 
 });
 
-if (!process.env.ANTHROPIC_API_KEY) {
-  console.warn("⚠️ ANTHROPIC_API_KEY not set. Claude enrichment will be disabled.");
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+
+if (!ANTHROPIC_API_KEY) {
+  logger.warn("⚠️ ANTHROPIC_API_KEY not set. Claude enrichment will be disabled.");
 }
 
 /**

@@ -1,8 +1,9 @@
 // src/scan.ts
 import path from "path";
-import { scanReact } from "./scan/react.js";
-import { scanVue } from "./scan/vue.js";
+import { scanReact } from "./scan/react";
+import { scanVue } from "./scan/vue";
 import fs from "fs";
+import logger from "./logger";
 
 interface Route {
   path: string;
@@ -21,7 +22,7 @@ export async function scanProject(
   srcDir: string,
   isVue: boolean = false,
   outputJson: boolean = false
-): Promise<void> {
+): Promise<Route[]> {
   const abs = path.resolve(process.cwd(), srcDir);
 
   let scanDir = abs;
@@ -31,12 +32,12 @@ export async function scanProject(
       if (fs.existsSync(alt) && fs.statSync(alt).isDirectory()) {
         scanDir = alt;
       } else {
-        console.error(`❌ Path not found: ${scanDir}`);
+        logger.error(`❌ Path not found: ${scanDir}`);
         process.exit(1);
       }
     }
   } catch (err) {
-    console.error(`❌ Error accessing path: ${scanDir}`, err);
+    logger.error({ err }, `❌ Error accessing path: ${scanDir}`);
     process.exit(1);
   }
 
@@ -45,13 +46,15 @@ export async function scanProject(
     : await scanReact(scanDir);
 
   if (outputJson) {
-    console.log(JSON.stringify(routes, null, 2));
+    logger.info(JSON.stringify(routes, null, 2));
   } else {
-    console.log("🔍 Found routes:");
+    logger.info("🔍 Found routes:");
     if (routes.length === 0) {
-      console.log("  (no routes found)");
+      logger.info("  (no routes found)");
     } else {
-      routes.forEach(r => console.log("  •", r.path));
+      routes.forEach(r => logger.info("  •", r.path));
     }
   }
+
+  return routes;
 }

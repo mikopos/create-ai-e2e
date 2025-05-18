@@ -1,13 +1,13 @@
 import axios from "axios";
+import pino from "pino";
 
+const logger = pino();
 const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 const HF_MODEL = process.env.HF_MODEL ?? "google/flan-t5-small";
 const HF_API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
 
 if (!HF_API_KEY) {
-  console.warn(
-      "⚠️ HUGGINGFACE_API_KEY not set. Hugging Face enrichment will be disabled."
-  );
+  logger.warn("⚠️ HUGGINGFACE_API_KEY not set. Hugging Face enrichment will be disabled.");
 }
 
 /**
@@ -51,10 +51,7 @@ export async function enrichAssertionsHuggingFace(
     .map(line => line.trim())
     .filter(line => line.startsWith("await"));
   } catch (err) {
-    console.warn(
-        `⚠️ Hugging Face enrichment failed (model=${HF_MODEL}):`,
-        err
-    );
+    logger.error({ err, model: HF_MODEL }, "⚠️ Hugging Face enrichment failed");
     return [];
   }
 }

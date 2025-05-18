@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // types/openai.d.ts
 declare module "openai" {
   interface Choice {

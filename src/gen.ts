@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-import fs from "fs";
 import path from "path";
-import { scanReact } from "./scan/react.js";
-import { scanVue } from "./scan/vue.js";
-import { makeSpec } from "./gen/testTemplate.js";
-import { enrichAssertions } from "./ai/claude.js";
-import { enrichAssertionsOpenAI } from "./ai/openai.js";
-import {enrichAssertionsHuggingFace} from "./ai/huggingface.js";
+import fs from "fs";
+import { scanProject } from "./scan";
+import { enrichAssertions } from "./ai/claude";
+import { enrichAssertionsOpenAI } from "./ai/openai";
+import { enrichAssertionsHuggingFace } from "./ai/huggingface";
+import { makeSpec } from "./gen/testTemplate";
+import logger from "./logger";
 
 interface Route {
   path: string;
@@ -20,54 +20,52 @@ interface Route {
  *
  * @param useAI - Whether to call Claude for extra assertions
  */
-export async function genTests(useAI: boolean = false): Promise<void> {
-  console.log(`🧪 Generating tests (AI enabled: ${useAI})`);
+export async function generateTests(
+  srcDir: string,
+  useAI: boolean = true
+): Promise<void> {
+  logger.info(`🧪 Generating tests (AI enabled: ${useAI})`);
 
-  const srcDir = path.resolve(process.cwd(), "src");
-  const isVue = fs.existsSync(path.join(srcDir, "router"));
+  const routes = await scanProject(srcDir);
+  if (routes.length === 0) {
+    logger.warn("No routes found to generate tests for");
+    return;
+  }
 
-  const routes: Route[] = isVue
-      ? await scanVue(srcDir)
-      : await scanReact(srcDir);
-
-  const testsDir = path.resolve(process.cwd(), "tests");
-  if (!fs.existsSync(testsDir)) {
-    fs.mkdirSync(testsDir);
+  // Create tests directory if it doesn't exist
+  const testDir = path.join(process.cwd(), "tests");
+  if (!fs.existsSync(testDir)) {
+    fs.mkdirSync(testDir);
   }
 
   for (const route of routes) {
-    const slug = route.path === "/"
-        ? "home"
-        : route.path.replace(/^\//, "").replace(/\//g, "_");
-    const specPath = path.join(testsDir, `${slug}.spec.ts`);
+    const specPath = path.join(testDir, `${route.path.replace(/\//g, "-")}.spec.ts`);
+    let assertions: string[] = [];
 
-    let extra: string[] = [];
     if (useAI) {
       try {
-        extra = await enrichAssertions(route.path);
+        assertions = await enrichAssertions(route.path);
       } catch (err) {
-        console.warn(`⚠️ Claude enrichment failed for ${route.path}:`, err);
-
+        logger.warn({ err, path: route.path }, `⚠️ Claude enrichment failed`);
         try {
-          console.log(`🔄 Falling back to OpenAI for ${route.path}`);
-          extra = await enrichAssertionsOpenAI(route.path);
+          logger.info(`🔄 Falling back to OpenAI for ${route.path}`);
+          assertions = await enrichAssertionsOpenAI(route.path);
         } catch (err2) {
-          console.warn(`⚠️ OpenAI enrichment also failed for ${route.path}:`, err2);
-
+          logger.warn({ err: err2, path: route.path }, `⚠️ OpenAI enrichment also failed`);
           try {
-            console.log(`🔄 Falling back to Hugging Face for ${route.path}`);
-            extra = await enrichAssertionsHuggingFace(route.path);
-          } catch (err2) {
-            console.warn(`⚠️ Hugging Face enrichment also failed for ${route.path}:`, err2);
+            logger.info(`🔄 Falling back to Hugging Face for ${route.path}`);
+            assertions = await enrichAssertionsHuggingFace(route.path);
+          } catch (err3) {
+            logger.warn({ err: err3, path: route.path }, `⚠️ Hugging Face enrichment also failed`);
           }
         }
       }
     }
 
-    const content = makeSpec(route.path, "body", extra);
-    fs.writeFileSync(specPath, content, "utf8");
-    console.log(`Created ${specPath}`);
+    const testContent = makeSpec(route.path, "body", undefined, assertions);
+    fs.writeFileSync(specPath, testContent);
+    logger.info(`Created ${specPath}`);
   }
 
-  console.log(`✅ Generated ${routes.length} test(s) in tests/`);
+  logger.info(`✅ Generated ${routes.length} test(s) in tests/`);
 }

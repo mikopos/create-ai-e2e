@@ -1,11 +1,14 @@
 import OpenAI from "openai";
+import logger from "../logger";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY 
 });
 
-if (!process.env.OPENAI_API_KEY) {
-  console.warn("⚠️ OPENAI_API_KEY not set. OpenAI enrichment will be disabled.");
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+if (!OPENAI_API_KEY) {
+  logger.warn("⚠️ OPENAI_API_KEY not set. OpenAI enrichment will be disabled.");
 }
 
 /**
